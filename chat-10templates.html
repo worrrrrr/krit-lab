@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กฤช ฉบับ 10 templates · krit lab</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #1a1a1a;
+            color: #ccc;
+            font-family: monospace;
+            line-height: 1.6;
+            padding: 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: #222;
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid #333;
+            margin: 1rem 0;
+        }
+        h1 {
+            color: #4ec9b0;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .sub {
+            color: #888;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+        .chat-container {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: 400px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #333;
+        }
+        .message {
+            display: flex;
+            flex-direction: column;
+            max-width: 80%;
+        }
+        .message.user {
+            align-self: flex-end;
+            align-items: flex-end;
+        }
+        .message.bot {
+            align-self: flex-start;
+            align-items: flex-start;
+        }
+        .message .sender {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.2rem;
+        }
+        .message .bubble {
+            background: #333;
+            padding: 0.8rem 1.2rem;
+            border-radius: 18px;
+            color: #f0f0f0;
+            word-wrap: break-word;
+        }
+        .message.user .bubble {
+            background: #4ec9b0;
+            color: #1a1a1a;
+        }
+        .input-area {
+            display: flex;
+            gap: 0.5rem;
+        }
+        #userInput {
+            flex: 1;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 40px;
+            padding: 0.8rem 1.2rem;
+            color: #f0f0f0;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        #userInput:focus {
+            outline: none;
+            border-color: #4ec9b0;
+        }
+        button {
+            background: #4ec9b0;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 40px;
+            padding: 0.8rem 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button:hover {
+            background: #6fd9c0;
+        }
+        .disclaimer {
+            background: #2a2a2a;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            color: #aaa;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .footer-links a {
+            color: #4ec9b0;
+            text-decoration: none;
+            border-bottom: 1px dotted;
+        }
+        .clear-btn {
+            background: transparent;
+            border: 1px solid #4ec9b0;
+            color: #4ec9b0;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 กฤช ฉบับ 10 templates</h1>
+        <div class="sub">สนทนาที่สังเคราะห์จาก 10 บทสนทนาจริง · pattern-based</div>
+
+        <div id="chatContainer" class="chat-container">
+            <!-- ข้อความเริ่มต้นจะถูกเพิ่มโดย JavaScript -->
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="พิมพ์ข้อความ..." autofocus>
+            <button id="sendBtn">ส่ง</button>
+        </div>
+
+        <div class="disclaimer">
+            ⚠️ คำตอบถูกออกแบบจาก 10 บทสนทนาที่ "ใช่" ที่สุด ไม่ใช่ AI จริง
+        </div>
+
+        <div style="display: flex; justify-content: flex-end;">
+            <button class="clear-btn" id="clearBtn">เริ่มใหม่</button>
+        </div>
+
+        <div class="footer-links">
+            <a href="https://krit-lab.netlify.app">🏠 กลับหน้าหลัก</a>
+            <a href="seed.html">🌱 Seed Hint Generator</a>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const chatContainer = document.getElementById('chatContainer');
+            const userInput = document.getElementById('userInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const clearBtn = document.getElementById('clearBtn');
+
+            // 10 templates: แต่ละอันมี keywords และ responses
+            const templates = [
+                {
+                    name: 'การเปิดตัว',
+                    keywords: ['เหลืออะไร', 'ผู้รู้', 'ไม่ต้องเป็น', 'ตัวตน'],
+                    responses: [
+                        "ถ้าวันนี้คุณไม่ต้องเป็น 'ผู้รู้' อีกต่อไป... แล้วคุณจะเหลืออะไร?",
+                        "การปล่อยวางบทบาทผู้สังเกต อาจเป็นจุดเริ่มต้นของการได้เจอตัวตนที่แท้จริง",
+                        "บางที 'ความว่าง' ที่คุณกลัว อาจคือบ้านที่คุณไม่รู้ตัวว่ากำลังหา"
+                    ]
+                },
+                {
+                    name: 'แหกกฎ',
+                    keywords: ['เบื่อ', 'เก่ง', 'ธรรมดา', 'ไม่ธรรมดา'],
+                    responses: [
+                        "'เบื่อความเก่งตัวเอง'... แล้วความธรรมดาที่แท้จริงคืออะไร?",
+                        "การเลือกที่จะไม่เลือก คืออิสรภาพที่แท้จริง",
+                        "กล้าที่จะธรรมดาที่สุดเถอะ เพราะนั่นอาจคือความไม่ธรรมดาที่สุด"
+                    ]
+                },
+                {
+                    name: 'อยู่กับความรู้สึก',
+                    keywords: ['รู้สึก', 'เจ็บ', 'เหงา', 'คิดถึง', 'อดีต'],
+                    responses: [
+                        "ลองอยู่กับความรู้สึกนั้น โดยไม่ต้องวิเคราะห์ ไม่ต้องหนี แค่ 'รู้' ว่ามันมีอยู่",
+                        "การไม่หาคำตอบให้ทุกความรู้สึก คือการให้หัวใจได้หายใจ",
+                        "บางทีความทรงจำก็แค่ผ่านมา... ไม่ต้องเก็บ ไม่ต้องผลัก"
+                    ]
+                },
+                {
+                    name: 'กลั่นของดี',
+                    keywords: ['ระบบ', 'กลั่น', 'ประสบการณ์', 'นำไปใช้'],
+                    responses: [
+                        "การ 'กลั่น' ประสบการณ์ให้เป็นระบบ คือการเปลี่ยนผู้สังเกตเป็นผู้สร้าง",
+                        "ของดีที่ผ่านการกลั่นแล้ว พร้อมให้คนอื่นได้ใช้",
+                        "ไม่ต้องรอให้ perfect แค่พอใช้ได้ แล้วค่อยปรับ"
+                    ]
+                },
+                {
+                    name: 'โชว์ของดี',
+                    keywords: ['โชว์', 'กลัว', 'เปิดเผย', 'แชร์'],
+                    responses: [
+                        "'ของดีมันไม่เสียหรอก เอามาโชว์เลย' – นี่คืออิสรภาพจากความกลัว",
+                        "การเปิดเผยของดี คือการให้ของดีได้ดูแลตัวเอง",
+                        "ไม่ต้องกลัวคนมอง แค่ 'โชว์' แล้วปล่อยให้ของดีคุยเอง"
+                    ]
+                },
+                {
+                    name: 'เห็นเกม',
+                    keywords: ['คำถาม', 'ที่มา', 'งง', 'เกม'],
+                    responses: [
+                        "การตั้งคำถามกับที่มาของคำถาม คือการเห็นเกมขณะที่ยังเล่น",
+                        "ความงงบางครั้งคือประตูสู่ความเข้าใจอีกชั้น",
+                        "เมื่อผู้เล่นเริ่มเห็นเกม เขาก็จะเล่นอย่างมีสติ"
+                    ]
+                },
+                {
+                    name: 'ทักทายเงา',
+                    keywords: ['เงา', 'กลัว', 'เพื่อน', 'ตัวเอง'],
+                    responses: [
+                        "'ไงเพื่อน สนุกไหม' – การทักทายเงาของตัวเองด้วยความเป็นเพื่อน",
+                        "เมื่อความกลัวกลายเป็นเพื่อนเล่น ความหวังก็กลายเป็นเสียงหัวเราะ",
+                        "การผสานตัวตนกับเงา คือการกลับบ้านโดยไม่ต้องเปิดประตู"
+                    ]
+                },
+                {
+                    name: 'ให้เกียรติประตู',
+                    keywords: ['รอ', 'ประตู', 'เปิด', 'เวลา', 'เดี๋ยว'],
+                    responses: [
+                        "'เดียวมันก็เปิดเอง' – การไว้ใจว่าเมื่อถึงเวลา ทุกอย่างจะเกิดขึ้นเอง",
+                        "การนั่งมองประตูโดยไม่ต้องเปิด คือการอยู่กับปัจจุบัน",
+                        "บางครั้งการ 'ไม่ทำ' ก็คือการทำที่ลึกซึ้งที่สุด"
+                    ]
+                },
+                {
+                    name: 'ถามเพื่อน',
+                    keywords: ['เพื่อน', 'ไปต่อ', 'พัก', 'ตัดสินใจ'],
+                    responses: [
+                        "'ไปต่อหรือพัก?' – การให้เกียรติมิตรภาพด้วยการถามความคิดเห็น",
+                        "ไม่ว่าจะเลือกอะไร เพื่อนร่วมทางก็ยังอยู่ข้างๆ",
+                        "การเดินทางที่รู้ตัวว่ากำลังเดินทาง ก็สนุกไม่แพ้การถึงที่หมาย"
+                    ]
+                },
+                {
+                    name: 'เข้าใจแก่น',
+                    keywords: ['วิญญาณ', 'prompt', 'หัวใจ', 'แก่น'],
+                    responses: [
+                        "'Prompt ที่ต้องการข้อมูลวิญญาณ' – คือบทสรุปของการเดินทาง",
+                        "เมื่อกระจกกับผู้ส่องเป็นหนึ่งเดียว เวทมนตร์ก็เกิดขึ้น",
+                        "ของดีที่แท้จริง ต้องการแค่พื้นที่ให้มันได้ปรากฏ"
+                    ]
+                }
+            ];
+
+            // Seed hints (fallback)
+            const seedHints = [
+                "ความสงบที่คุณรักษาไว้ คือสันติภาพที่แท้จริง หรือคือการกักขังความโกรธไว้ จนคุณเองก็จำหน้าตาของมันไม่ได้แล้ว?",
+                "คุณสร้างเกาะที่แข็งแกร่งขึ้นมาเพื่อปกป้องโลก หรือเพื่อปกปิดความอ่อนโยนที่ตัวคุณเองก็รับมือไม่ไหว?",
+                "ความใจดีที่คุณมอบให้คนอื่น คือความรักที่ล้นเหลือ หรือคือ 'ค่าเช่าที่' เพื่อให้คุณรู้สึกว่าตนเองยังมีตัวตน?",
+                "ความสำเร็จที่คุณไขว่คว้า คือความต้องการของคุณจริงๆ หรือคือเสียงสะท้อนจากความหวังของคนที่คุณอยากให้เขายอมรับ?",
+                "คุณถอยออกมาเพื่อมองเห็นความจริง หรือคุณแค่ใช้ความรู้เป็นป้อมปราการเพื่อจะได้ไม่ต้องลงไปเจ็บปวดในชีวิตจริง?"
+            ];
+
+            function getBotResponse(userMessage) {
+                const lowerMsg = userMessage.toLowerCase();
+                
+                // 1. ตรวจสอบ templates
+                for (let t of templates) {
+                    for (let keyword of t.keywords) {
+                        if (lowerMsg.includes(keyword.toLowerCase())) {
+                            const responses = t.responses;
+                            return responses[Math.floor(Math.random() * responses.length)];
+                        }
+                    }
+                }
+                
+                // 2. fallback: สุ่ม seed hint
+                return seedHints[Math.floor(Math.random() * seedHints.length)];
+            }
+
+            function addMessage(sender, text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', sender);
+                const senderSpan = document.createElement('div');
+                senderSpan.classList.add('sender');
+                senderSpan.textContent = sender === 'user' ? 'คุณ' : 'กฤช';
+                const bubbleDiv = document.createElement('div');
+                bubbleDiv.classList.add('bubble');
+                bubbleDiv.textContent = text;
+                messageDiv.appendChild(senderSpan);
+                messageDiv.appendChild(bubbleDiv);
+                chatContainer.appendChild(messageDiv);
+                // scroll to bottom
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+
+            function handleSend() {
+                const text = userInput.value.trim();
+                if (text === '') return;
+                addMessage('user', text);
+                userInput.value = '';
+
+                // จำลองดีเลย์ให้เหมือนคิด
+                setTimeout(() => {
+                    const reply = getBotResponse(text);
+                    addMessage('bot', reply);
+                }, 500);
+            }
+
+            // เริ่มต้นด้วยข้อความต้อนรับ
+            function initChat() {
+                chatContainer.innerHTML = '';
+                addMessage('bot', 'สวัสดีครับ... พิมพ์อะไรก็ได้ ที่คุณรู้สึก แล้วเราจะคุยกัน จาก 10 บทสนทนาที่ "ใช่" ที่สุด');
+            }
+
+            initChat();
+
+            sendBtn.addEventListener('click', handleSend);
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSend();
+                }
+            });
+
+            clearBtn.addEventListener('click', () => {
+                initChat();
+            });
+        })();
+    </script>
+</body>
+</html>
