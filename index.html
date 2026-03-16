@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>krit lab · พื้นที่ทดลอง</title>
+    <style>
+        body { background: #1a1a1a; color: #ccc; font-family: monospace; padding: 2rem; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #4ec9b0; border-bottom: 1px solid #333; }
+        .badge { display: inline-block; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.8rem; }
+        .badge.green { background: #2a5; color: #000; }
+        .badge.yellow { background: #fb0; color: #000; }
+        .badge.red { background: #c33; color: #fff; }
+        .project { background: #222; padding: 1rem; margin: 1rem 0; border-radius: 8px; }
+        a { color: #4ec9b0; }
+        .footer { margin-top: 4rem; border-top: 1px solid #333; padding-top: 1rem; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 krit lab</h1>
+        <p><em>พื้นที่สำหรับลองของ · เล่นของ · (และอาจพัง)</em></p>
+        <p style="background:#2a2; color:#000; padding:0.5rem; border-radius:4px;">
+            ⚠️ ที่นี่คือสนามทดลอง ถ้าอยากเจอกฤชตัวจริง ไปที่ 
+            <a href="https://kritcomp.netlify.app" style="color:#000; text-decoration:underline;">kritcomp.netlify.app</a>
+        </p>
+
+        <div class="project">
+            <span class="badge yellow">🟡 กำลังเล่น</span>
+            <h3>กฤช ฉบับทดลอง</h3>
+            <p>แชทบอทเวอร์ชันทดลอง Prompt ใหม่ น้ำเสียงต่างออกไป</p>
+        </div>
+
+        <div class="project">
+            <span class="badge green">🟢 เล่นได้</span>
+            <h3>The Seed Hint Generator</h3>
+            <p>สุ่มรหัสแรกเกิดจากคลัง (ไม่ต้องคุยกับ AI)</p>
+        </div>
+
+        <div class="project">
+            <span class="badge yellow">🟡 กำลังเขียน</span>
+            <h3>The Observer's Log</h3>
+            <p>บทความจากบทสนทนาจริง (แบบที่เราคุยกัน)</p>
+        </div>
+
+        <div class="project">
+            <span class="badge red">🔴 ยังไม่เริ่ม</span>
+            <h3>MBTI Quiz แบบกฤช</h3>
+            <p>แบบทดสอบสั้นๆ ที่ไม่เหมือนใคร</p>
+        </div>
+
+        <div style="background:#222; padding:1rem; margin-top:2rem;">
+            <h3>📝 บอกอะไรหน่อย</h3>
+            <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                <textarea name="message" rows="3" style="width:100%; background:#1a1a1a; border:1px solid #333; color:#ccc; padding:0.5rem;"></textarea>
+                <button type="submit" style="background:#4ec9b0; border:none; padding:0.5rem 2rem; margin-top:0.5rem;">ส่ง</button>
+            </form>
+        </div>
+
+        <div class="footer">
+            <a href="https://kritcomp.netlify.app">🏠 กลับบ้านหลัก</a> • 
+            <a href="https://github.com/worrrrrr/krit-lab">📦 GitHub</a> • 
+            เวอร์ชัน 0.1.0
+        </div>
+    </div>
+</body>
+</html>
