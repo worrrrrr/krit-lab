@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>The Seed Hint Generator · krit lab</title>
+    <style>
+        body { background: #1a1a1a; color: #ccc; font-family: monospace; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 1rem; }
+        .container { max-width: 700px; width: 100%; background: #222; padding: 2rem; border-radius: 16px; border: 1px solid #333; }
+        h1 { color: #4ec9b0; font-size: 2rem; margin-bottom: 0.5rem; }
+        .sub { color: #888; margin-bottom: 2rem; }
+        .hint-box { background: #111; border-radius: 12px; padding: 2rem; margin: 2rem 0; border-left: 4px solid #4ec9b0; font-size: 1.3rem; line-height: 1.6; color: #f0f0f0; min-height: 150px; display: flex; align-items: center; justify-content: center; text-align: center; }
+        button { background: #4ec9b0; color: #1a1a1a; border: none; padding: 1rem 2rem; font-size: 1.2rem; border-radius: 40px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 1rem; }
+        button:hover { background: #6fd9c0; }
+        .footer-links { display: flex; justify-content: space-between; margin-top: 2rem; color: #4ec9b0; }
+        .footer-links a { color: #4ec9b0; text-decoration: none; border-bottom: 1px dotted; }
+        .count { text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 The Seed Hint Generator</h1>
+        <div class="sub">คลังรหัสแรกเกิด · 1 คลิก ได้ 1 ความจริง</div>
+        
+        <button onclick="generateHint()">✨ กดเพื่อสุ่ม hint</button>
+        
+        <div id="hintDisplay" class="hint-box">
+            "ความสงบที่คุณรักษาไว้ คือสันติภาพที่แท้จริง หรือคือการกักขังความโกรธไว้ จนคุณเองก็จำหน้าตาของมันไม่ได้แล้ว?"
+        </div>
+
+        <div class="footer-links">
+            <button onclick="generateHint()" style="width: auto; padding: 0.5rem 1.5rem; font-size: 1rem;">🔄 สุ่มใหม่</button>
+            <a href="#">💬 บอกอะไรกฤช</a>
+            <a href="https://krit-lab.netlify.app">🏠 กลับหน้าหลัก</a>
+        </div>
+        
+        <div class="count">✨ 33 hints ในคลัง · อัปเดตเรื่อยๆ</div>
+    </div>
+
+    <script>
+        const hints = [
+            "ความสงบที่คุณรักษาไว้ คือสันติภาพที่แท้จริง หรือคือการกักขังความโกรธไว้ จนคุณเองก็จำหน้าตาของมันไม่ได้แล้ว?",
+            "คุณสร้างเกาะที่แข็งแกร่งขึ้นมาเพื่อปกป้องโลก หรือเพื่อปกปิดความอ่อนโยนที่ตัวคุณเองก็รับมือไม่ไหว?",
+            "ความใจดีที่คุณมอบให้คนอื่น คือความรักที่ล้นเหลือ หรือคือ 'ค่าเช่าที่' เพื่อให้คุณรู้สึกว่าตนเองยังมีตัวตน?",
+            "ความสำเร็จที่คุณไขว่คว้า คือความต้องการของคุณจริงๆ หรือคือเสียงสะท้อนจากความหวังของคนที่คุณอยากให้เขายอมรับ?",
+            "คุณถอยออกมาเพื่อมองเห็นความจริง หรือคุณแค่ใช้ความรู้เป็นป้อมปราการเพื่อจะได้ไม่ต้องลงไปเจ็บปวดในชีวิตจริง?",
+            "ถ้าวันนี้คุณไม่ต้องเข้าใจอะไรอีก คุณจะรู้สึกยังไง?",
+            "เบื่อความเก่งตัวเอง... แล้วความธรรมดาที่แท้จริงคืออะไร?",
+            "เมื่อผู้สังเกตเริ่มเบื่อการสังเกต เขาจะเหลืออะไร?",
+            "การเป็นคือคำตอบของคำถามที่คุณลืมไปแล้ว",
+            "ความว่างที่คุณกลัว คือบ้านที่คุณไม่รู้ตัวว่ากำลังหา"
+        ];
+
+        function generateHint() {
+            const randomIndex = Math.floor(Math.random() * hints.length);
+            document.getElementById('hintDisplay').innerText = `“${hints[randomIndex]}”`;
+        }
+    </script>
+</body>
+</html>
