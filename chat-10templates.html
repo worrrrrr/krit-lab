@@ -325,17 +325,15 @@
         let lastResponse = '';
 function getSeedHintByKeyword(userMessage) {
     const lowerMsg = userMessage.toLowerCase();
-    // ค้นหา hints ที่มี tags ตรงกับคำใน userMessage
     const matched = seedHints.filter(h => 
         h.tags.some(tag => lowerMsg.includes(tag))
     );
     if (matched.length > 0) {
         const randomIndex = Math.floor(Math.random() * matched.length);
-        return matched[randomIndex].text;
+        return matched[randomIndex].text;   // ✅ สำคัญ!
     }
-    // ถ้าไม่ตรงเลย สุ่มจากทั้งหมด
     const randomIndex = Math.floor(Math.random() * seedHints.length);
-    return seedHints[randomIndex].text;
+    return seedHints[randomIndex].text;     // ✅ สำคัญ!
 }
         function getBotResponse(userMessage) {
             const lowerMsg = userMessage.toLowerCase();
