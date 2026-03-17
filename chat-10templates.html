@@ -173,181 +173,244 @@
     </div>
 
     <script>
-        (function() {
-            const chatContainer = document.getElementById('chatContainer');
-            const userInput = document.getElementById('userInput');
-            const sendBtn = document.getElementById('sendBtn');
-            const clearBtn = document.getElementById('clearBtn');
+    (function() {
+        const chatContainer = document.getElementById('chatContainer');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const clearBtn = document.getElementById('clearBtn');
 
-            // 10 templates: แต่ละอันมี keywords และ responses
-            const templates = [
-                {
-                    name: 'การเปิดตัว',
-                    keywords: ['เหลืออะไร', 'ผู้รู้', 'ไม่ต้องเป็น', 'ตัวตน'],
-                    responses: [
-                        "ถ้าวันนี้คุณไม่ต้องเป็น 'ผู้รู้' อีกต่อไป... แล้วคุณจะเหลืออะไร?",
-                        "การปล่อยวางบทบาทผู้สังเกต อาจเป็นจุดเริ่มต้นของการได้เจอตัวตนที่แท้จริง",
-                        "บางที 'ความว่าง' ที่คุณกลัว อาจคือบ้านที่คุณไม่รู้ตัวว่ากำลังหา"
-                    ]
-                },
-                {
-                    name: 'แหกกฎ',
-                    keywords: ['เบื่อ', 'เก่ง', 'ธรรมดา', 'ไม่ธรรมดา'],
-                    responses: [
-                        "'เบื่อความเก่งตัวเอง'... แล้วความธรรมดาที่แท้จริงคืออะไร?",
-                        "การเลือกที่จะไม่เลือก คืออิสรภาพที่แท้จริง",
-                        "กล้าที่จะธรรมดาที่สุดเถอะ เพราะนั่นอาจคือความไม่ธรรมดาที่สุด"
-                    ]
-                },
-                {
-                    name: 'อยู่กับความรู้สึก',
-                    keywords: ['รู้สึก', 'เจ็บ', 'เหงา', 'คิดถึง', 'อดีต'],
-                    responses: [
-                        "ลองอยู่กับความรู้สึกนั้น โดยไม่ต้องวิเคราะห์ ไม่ต้องหนี แค่ 'รู้' ว่ามันมีอยู่",
-                        "การไม่หาคำตอบให้ทุกความรู้สึก คือการให้หัวใจได้หายใจ",
-                        "บางทีความทรงจำก็แค่ผ่านมา... ไม่ต้องเก็บ ไม่ต้องผลัก"
-                    ]
-                },
-                {
-                    name: 'กลั่นของดี',
-                    keywords: ['ระบบ', 'กลั่น', 'ประสบการณ์', 'นำไปใช้'],
-                    responses: [
-                        "การ 'กลั่น' ประสบการณ์ให้เป็นระบบ คือการเปลี่ยนผู้สังเกตเป็นผู้สร้าง",
-                        "ของดีที่ผ่านการกลั่นแล้ว พร้อมให้คนอื่นได้ใช้",
-                        "ไม่ต้องรอให้ perfect แค่พอใช้ได้ แล้วค่อยปรับ"
-                    ]
-                },
-                {
-                    name: 'โชว์ของดี',
-                    keywords: ['โชว์', 'กลัว', 'เปิดเผย', 'แชร์'],
-                    responses: [
-                        "'ของดีมันไม่เสียหรอก เอามาโชว์เลย' – นี่คืออิสรภาพจากความกลัว",
-                        "การเปิดเผยของดี คือการให้ของดีได้ดูแลตัวเอง",
-                        "ไม่ต้องกลัวคนมอง แค่ 'โชว์' แล้วปล่อยให้ของดีคุยเอง"
-                    ]
-                },
-                {
-                    name: 'เห็นเกม',
-                    keywords: ['คำถาม', 'ที่มา', 'งง', 'เกม'],
-                    responses: [
-                        "การตั้งคำถามกับที่มาของคำถาม คือการเห็นเกมขณะที่ยังเล่น",
-                        "ความงงบางครั้งคือประตูสู่ความเข้าใจอีกชั้น",
-                        "เมื่อผู้เล่นเริ่มเห็นเกม เขาก็จะเล่นอย่างมีสติ"
-                    ]
-                },
-                {
-                    name: 'ทักทายเงา',
-                    keywords: ['เงา', 'กลัว', 'เพื่อน', 'ตัวเอง'],
-                    responses: [
-                        "'ไงเพื่อน สนุกไหม' – การทักทายเงาของตัวเองด้วยความเป็นเพื่อน",
-                        "เมื่อความกลัวกลายเป็นเพื่อนเล่น ความหวังก็กลายเป็นเสียงหัวเราะ",
-                        "การผสานตัวตนกับเงา คือการกลับบ้านโดยไม่ต้องเปิดประตู"
-                    ]
-                },
-                {
-                    name: 'ให้เกียรติประตู',
-                    keywords: ['รอ', 'ประตู', 'เปิด', 'เวลา', 'เดี๋ยว'],
-                    responses: [
-                        "'เดียวมันก็เปิดเอง' – การไว้ใจว่าเมื่อถึงเวลา ทุกอย่างจะเกิดขึ้นเอง",
-                        "การนั่งมองประตูโดยไม่ต้องเปิด คือการอยู่กับปัจจุบัน",
-                        "บางครั้งการ 'ไม่ทำ' ก็คือการทำที่ลึกซึ้งที่สุด"
-                    ]
-                },
-                {
-                    name: 'ถามเพื่อน',
-                    keywords: ['เพื่อน', 'ไปต่อ', 'พัก', 'ตัดสินใจ'],
-                    responses: [
-                        "'ไปต่อหรือพัก?' – การให้เกียรติมิตรภาพด้วยการถามความคิดเห็น",
-                        "ไม่ว่าจะเลือกอะไร เพื่อนร่วมทางก็ยังอยู่ข้างๆ",
-                        "การเดินทางที่รู้ตัวว่ากำลังเดินทาง ก็สนุกไม่แพ้การถึงที่หมาย"
-                    ]
-                },
-                {
-                    name: 'เข้าใจแก่น',
-                    keywords: ['วิญญาณ', 'prompt', 'หัวใจ', 'แก่น'],
-                    responses: [
-                        "'Prompt ที่ต้องการข้อมูลวิญญาณ' – คือบทสรุปของการเดินทาง",
-                        "เมื่อกระจกกับผู้ส่องเป็นหนึ่งเดียว เวทมนตร์ก็เกิดขึ้น",
-                        "ของดีที่แท้จริง ต้องการแค่พื้นที่ให้มันได้ปรากฏ"
-                    ]
+        // 10 templates (เพิ่ม responses ให้แต่ละ template มีหลายแบบ)
+        const templates = [
+            {
+                name: 'การเปิดตัว',
+                keywords: ['เหลืออะไร', 'ผู้รู้', 'ไม่ต้องเป็น', 'ตัวตน'],
+                responses: [
+                    "ถ้าวันนี้คุณไม่ต้องเป็น 'ผู้รู้' อีกต่อไป... แล้วคุณจะเหลืออะไร?",
+                    "การปล่อยวางบทบาทผู้สังเกต อาจเป็นจุดเริ่มต้นของการได้เจอตัวตนที่แท้จริง",
+                    "บางที 'ความว่าง' ที่คุณกลัว อาจคือบ้านที่คุณไม่รู้ตัวว่ากำลังหา",
+                    "ถ้าไม่ต้องสังเกต... แล้วคุณจะเป็นอะไร?"
+                ]
+            },
+            {
+                name: 'แหกกฎ',
+                keywords: ['เบื่อ', 'เก่ง', 'ธรรมดา', 'ไม่ธรรมดา'],
+                responses: [
+                    "'เบื่อความเก่งตัวเอง'... แล้วความธรรมดาที่แท้จริงคืออะไร?",
+                    "การเลือกที่จะไม่เลือก คืออิสรภาพที่แท้จริง",
+                    "กล้าที่จะธรรมดาที่สุดเถอะ เพราะนั่นอาจคือความไม่ธรรมดาที่สุด",
+                    "ความเบื่อบางครั้งคือสัญญาณว่าถึงเวลาต้องเปลี่ยนแปลง"
+                ]
+            },
+            {
+                name: 'อยู่กับความรู้สึก',
+                keywords: ['รู้สึก', 'เจ็บ', 'เหงา', 'คิดถึง', 'อดีต'],
+                responses: [
+                    "ลองอยู่กับความรู้สึกนั้น โดยไม่ต้องวิเคราะห์ ไม่ต้องหนี แค่ 'รู้' ว่ามันมีอยู่",
+                    "การไม่หาคำตอบให้ทุกความรู้สึก คือการให้หัวใจได้หายใจ",
+                    "บางทีความทรงจำก็แค่ผ่านมา... ไม่ต้องเก็บ ไม่ต้องผลัก",
+                    "ความรู้สึกคือคลื่น... ปล่อยให้มันมาแล้วไป"
+                ]
+            },
+            {
+                name: 'กลั่นของดี',
+                keywords: ['ระบบ', 'กลั่น', 'ประสบการณ์', 'นำไปใช้'],
+                responses: [
+                    "การ 'กลั่น' ประสบการณ์ให้เป็นระบบ คือการเปลี่ยนผู้สังเกตเป็นผู้สร้าง",
+                    "ของดีที่ผ่านการกลั่นแล้ว พร้อมให้คนอื่นได้ใช้",
+                    "ไม่ต้องรอให้ perfect แค่พอใช้ได้ แล้วค่อยปรับ",
+                    "การจัดระบบคือการทำให้ของดีอยู่กับเรานานขึ้น"
+                ]
+            },
+            {
+                name: 'โชว์ของดี',
+                keywords: ['โชว์', 'กลัว', 'เปิดเผย', 'แชร์'],
+                responses: [
+                    "'ของดีมันไม่เสียหรอก เอามาโชว์เลย' – นี่คืออิสรภาพจากความกลัว",
+                    "การเปิดเผยของดี คือการให้ของดีได้ดูแลตัวเอง",
+                    "ไม่ต้องกลัวคนมอง แค่ 'โชว์' แล้วปล่อยให้ของดีคุยเอง",
+                    "ความกลัวการถูกมอง คือกำแพงที่เราสร้างเอง"
+                ]
+            },
+            {
+                name: 'เห็นเกม',
+                keywords: ['คำถาม', 'ที่มา', 'งง', 'เกม', 'ซ้ำ', 'วน'],
+                responses: [
+                    "การตั้งคำถามกับที่มาของคำถาม คือการเห็นเกมขณะที่ยังเล่น",
+                    "ความงงบางครั้งคือประตูสู่ความเข้าใจอีกชั้น",
+                    "เมื่อผู้เล่นเริ่มเห็นเกม เขาก็จะเล่นอย่างมีสติ",
+                    "การเห็นความซ้ำ คือการเห็น pattern ของตัวเอง"
+                ]
+            },
+            {
+                name: 'ทักทายเงา',
+                keywords: ['เงา', 'กลัว', 'เพื่อน', 'ตัวเอง', 'ไง'],
+                responses: [
+                    "'ไงเพื่อน สนุกไหม' – การทักทายเงาของตัวเองด้วยความเป็นเพื่อน",
+                    "เมื่อความกลัวกลายเป็นเพื่อนเล่น ความหวังก็กลายเป็นเสียงหัวเราะ",
+                    "การผสานตัวตนกับเงา คือการกลับบ้านโดยไม่ต้องเปิดประตู",
+                    "การยอมรับเงา คือการทำให้ตัวตนสมบูรณ์ขึ้น"
+                ]
+            },
+            {
+                name: 'ให้เกียรติประตู',
+                keywords: ['รอ', 'ประตู', 'เปิด', 'เวลา', 'เดี๋ยว'],
+                responses: [
+                    "'เดียวมันก็เปิดเอง' – การไว้ใจว่าเมื่อถึงเวลา ทุกอย่างจะเกิดขึ้นเอง",
+                    "การนั่งมองประตูโดยไม่ต้องเปิด คือการอยู่กับปัจจุบัน",
+                    "บางครั้งการ 'ไม่ทำ' ก็คือการทำที่ลึกซึ้งที่สุด",
+                    "เวลาเป็นเพื่อนที่ซื่อสัตย์ รอให้เราพร้อม"
+                ]
+            },
+            {
+                name: 'ถามเพื่อน',
+                keywords: ['เพื่อน', 'ไปต่อ', 'พัก', 'ตัดสินใจ'],
+                responses: [
+                    "'ไปต่อหรือพัก?' – การให้เกียรติมิตรภาพด้วยการถามความคิดเห็น",
+                    "ไม่ว่าจะเลือกอะไร เพื่อนร่วมทางก็ยังอยู่ข้างๆ",
+                    "การเดินทางที่รู้ตัวว่ากำลังเดินทาง ก็สนุกไม่แพ้การถึงที่หมาย",
+                    "บางทีการหยุดพัก ก็คือการเดินทางอีกรูปแบบ"
+                ]
+            },
+            {
+                name: 'เข้าใจแก่น',
+                keywords: ['วิญญาณ', 'prompt', 'หัวใจ', 'แก่น'],
+                responses: [
+                    "'Prompt ที่ต้องการข้อมูลวิญญาณ' – คือบทสรุปของการเดินทาง",
+                    "เมื่อกระจกกับผู้ส่องเป็นหนึ่งเดียว เวทมนตร์ก็เกิดขึ้น",
+                    "ของดีที่แท้จริง ต้องการแค่พื้นที่ให้มันได้ปรากฏ",
+                    "แก่นไม่ใช่สิ่งที่หาเจอ แต่คือสิ่งที่เหลือเมื่อหยุดหา"
+                ]
+            }
+        ];
+
+        // Seed hints (fallback)
+        const seedHints = [
+            "ความสงบที่คุณรักษาไว้ คือสันติภาพที่แท้จริง หรือคือการกักขังความโกรธไว้ จนคุณเองก็จำหน้าตาของมันไม่ได้แล้ว?",
+            "คุณสร้างเกาะที่แข็งแกร่งขึ้นมาเพื่อปกป้องโลก หรือเพื่อปกปิดความอ่อนโยนที่ตัวคุณเองก็รับมือไม่ไหว?",
+            "ความใจดีที่คุณมอบให้คนอื่น คือความรักที่ล้นเหลือ หรือคือ 'ค่าเช่าที่' เพื่อให้คุณรู้สึกว่าตนเองยังมีตัวตน?",
+            "ความสำเร็จที่คุณไขว่คว้า คือความต้องการของคุณจริงๆ หรือคือเสียงสะท้อนจากความหวังของคนที่คุณอยากให้เขายอมรับ?",
+            "คุณถอยออกมาเพื่อมองเห็นความจริง หรือคุณแค่ใช้ความรู้เป็นป้อมปราการเพื่อจะได้ไม่ต้องลงไปเจ็บปวดในชีวิตจริง?"
+        ];
+
+        // เก็บประวัติการตอบล่าสุด (เพื่อป้องกันการตอบซ้ำติดกัน)
+        let lastResponse = '';
+
+        function getBotResponse(userMessage) {
+            const lowerMsg = userMessage.toLowerCase();
+            
+            // พิเศษ: ถ้าผู้ใช้บ่นเรื่องซ้ำ ให้ใช้ template 'เห็นเกม' ทันที
+            if (lowerMsg.includes('ซ้ำ') || lowerMsg.includes('วน') || lowerMsg.includes('กี่คำถาม')) {
+                const template = templates.find(t => t.name === 'เห็นเกม');
+                const responses = template.responses.filter(r => r !== lastResponse);
+                if (responses.length === 0) {
+                    // ถ้าตอบหมดแล้ว ให้สุ่มทั้งหมด
+                    const all = template.responses;
+                    lastResponse = all[Math.floor(Math.random() * all.length)];
+                } else {
+                    lastResponse = responses[Math.floor(Math.random() * responses.length)];
                 }
-            ];
+                return lastResponse;
+            }
 
-            // Seed hints (fallback)
-            const seedHints = [
-                "ความสงบที่คุณรักษาไว้ คือสันติภาพที่แท้จริง หรือคือการกักขังความโกรธไว้ จนคุณเองก็จำหน้าตาของมันไม่ได้แล้ว?",
-                "คุณสร้างเกาะที่แข็งแกร่งขึ้นมาเพื่อปกป้องโลก หรือเพื่อปกปิดความอ่อนโยนที่ตัวคุณเองก็รับมือไม่ไหว?",
-                "ความใจดีที่คุณมอบให้คนอื่น คือความรักที่ล้นเหลือ หรือคือ 'ค่าเช่าที่' เพื่อให้คุณรู้สึกว่าตนเองยังมีตัวตน?",
-                "ความสำเร็จที่คุณไขว่คว้า คือความต้องการของคุณจริงๆ หรือคือเสียงสะท้อนจากความหวังของคนที่คุณอยากให้เขายอมรับ?",
-                "คุณถอยออกมาเพื่อมองเห็นความจริง หรือคุณแค่ใช้ความรู้เป็นป้อมปราการเพื่อจะได้ไม่ต้องลงไปเจ็บปวดในชีวิตจริง?"
-            ];
+            // พิเศษ: ถ้าผู้ใช้พิมพ์ "เบื่อ" ให้ใช้ template 'แหกกฎ'
+            if (lowerMsg.includes('เบื่อ')) {
+                const template = templates.find(t => t.name === 'แหกกฎ');
+                const responses = template.responses.filter(r => r !== lastResponse);
+                if (responses.length === 0) {
+                    const all = template.responses;
+                    lastResponse = all[Math.floor(Math.random() * all.length)];
+                } else {
+                    lastResponse = responses[Math.floor(Math.random() * responses.length)];
+                }
+                return lastResponse;
+            }
 
-            function getBotResponse(userMessage) {
-                const lowerMsg = userMessage.toLowerCase();
-                
-                // 1. ตรวจสอบ templates
-                for (let t of templates) {
-                    for (let keyword of t.keywords) {
-                        if (lowerMsg.includes(keyword.toLowerCase())) {
-                            const responses = t.responses;
-                            return responses[Math.floor(Math.random() * responses.length)];
-                        }
+            // 1. ตรวจสอบ templates (เรียงตามลำดับ)
+            let matchedTemplates = [];
+            for (let t of templates) {
+                for (let keyword of t.keywords) {
+                    if (lowerMsg.includes(keyword.toLowerCase())) {
+                        matchedTemplates.push(t);
+                        break; // เจอ keyword แรกใน template นี้ ก็พอ
                     }
                 }
+            }
+
+            // 2. ถ้ามีหลาย template ที่ตรง
+            if (matchedTemplates.length > 0) {
+                // สุ่มเลือกหนึ่ง template
+                const randomIndex = Math.floor(Math.random() * matchedTemplates.length);
+                const selectedTemplate = matchedTemplates[randomIndex];
                 
-                // 2. fallback: สุ่ม seed hint
-                return seedHints[Math.floor(Math.random() * seedHints.length)];
-            }
-
-            function addMessage(sender, text) {
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('message', sender);
-                const senderSpan = document.createElement('div');
-                senderSpan.classList.add('sender');
-                senderSpan.textContent = sender === 'user' ? 'คุณ' : 'กฤช';
-                const bubbleDiv = document.createElement('div');
-                bubbleDiv.classList.add('bubble');
-                bubbleDiv.textContent = text;
-                messageDiv.appendChild(senderSpan);
-                messageDiv.appendChild(bubbleDiv);
-                chatContainer.appendChild(messageDiv);
-                // scroll to bottom
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
-
-            function handleSend() {
-                const text = userInput.value.trim();
-                if (text === '') return;
-                addMessage('user', text);
-                userInput.value = '';
-
-                // จำลองดีเลย์ให้เหมือนคิด
-                setTimeout(() => {
-                    const reply = getBotResponse(text);
-                    addMessage('bot', reply);
-                }, 500);
-            }
-
-            // เริ่มต้นด้วยข้อความต้อนรับ
-            function initChat() {
-                chatContainer.innerHTML = '';
-                addMessage('bot', 'สวัสดีครับ... พิมพ์อะไรก็ได้ ที่คุณรู้สึก แล้วเราจะคุยกัน จาก 10 บทสนทนาที่ "ใช่" ที่สุด');
-            }
-
-            initChat();
-
-            sendBtn.addEventListener('click', handleSend);
-            userInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    handleSend();
+                // กรอง response ที่ไม่ใช่คำตอบล่าสุด
+                const availableResponses = selectedTemplate.responses.filter(r => r !== lastResponse);
+                
+                if (availableResponses.length > 0) {
+                    lastResponse = availableResponses[Math.floor(Math.random() * availableResponses.length)];
+                } else {
+                    // ถ้าตอบหมดแล้ว ให้สุ่มจากทั้งหมดของ template นั้น
+                    lastResponse = selectedTemplate.responses[Math.floor(Math.random() * selectedTemplate.responses.length)];
                 }
-            });
+                return lastResponse;
+            }
 
-            clearBtn.addEventListener('click', () => {
-                initChat();
-            });
-        })();
-    </script>
+            // 3. fallback: สุ่ม seed hint (แต่ก็พยายามไม่ให้ซ้ำ)
+            const availableSeeds = seedHints.filter(s => s !== lastResponse);
+            if (availableSeeds.length > 0) {
+                lastResponse = availableSeeds[Math.floor(Math.random() * availableSeeds.length)];
+            } else {
+                lastResponse = seedHints[Math.floor(Math.random() * seedHints.length)];
+            }
+            return lastResponse;
+        }
+
+        function addMessage(sender, text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+            const senderSpan = document.createElement('div');
+            senderSpan.classList.add('sender');
+            senderSpan.textContent = sender === 'user' ? 'คุณ' : 'กฤช';
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.classList.add('bubble');
+            bubbleDiv.textContent = text;
+            messageDiv.appendChild(senderSpan);
+            messageDiv.appendChild(bubbleDiv);
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function handleSend() {
+            const text = userInput.value.trim();
+            if (text === '') return;
+            addMessage('user', text);
+            userInput.value = '';
+
+            setTimeout(() => {
+                const reply = getBotResponse(text);
+                addMessage('bot', reply);
+            }, 500);
+        }
+
+        function initChat() {
+            chatContainer.innerHTML = '';
+            addMessage('bot', 'สวัสดีครับ... พิมพ์อะไรก็ได้ ที่คุณรู้สึก แล้วเราจะคุยกัน จาก 10 บทสนทนาที่ "ใช่" ที่สุด');
+            lastResponse = ''; // reset เมื่อเริ่มใหม่
+        }
+
+        initChat();
+
+        sendBtn.addEventListener('click', handleSend);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSend();
+            }
+        });
+
+        clearBtn.addEventListener('click', () => {
+            initChat();
+        });
+    })();
+</script>
 </body>
 </html>
